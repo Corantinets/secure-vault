@@ -1,0 +1,17 @@
+{
+  "name": "secure-vault",
+  "version": "1.0.0",
+  "description": "SecureVault : Partage de secrets one-time avec chiffrement AES-256",
+  "main": "index.js",
+  "scripts": {
+    "dev": "npm run dev --workspace=client",
+    "build": "npm run build --workspace=client",
+    "preview": "npm run preview --workspace=client",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["cybersécurité", "react", "nodejs", "chiffrement"],
+  "author": "Corantin Louchard",
+  "license": "MIT",
+  "workspaces": ["client"],
+  "type": "module"
+}
