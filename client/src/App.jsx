@@ -85,55 +85,109 @@ function App({ mode = 'create', secretId }) {
     setLoading(false);
   };
 
+  const copyToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(link);
+      alert('✅ Lien copié dans le presse-papier !');
+    } catch (err) {
+      alert('❌ Erreur lors de la copie');
+    }
+  };
+
   if (mode === 'view') {
     return (
       <div className="container">
-        <h1>SecureVault 🔒</h1>
-        <p>Lecture d'un secret sécurisé.</p>
+        <h1>🔒 SecureVault</h1>
+        <p className="subtitle">Lecture d'un secret sécurisé</p>
 
-        {loading && <p>Chargement...</p>}
-        {error && <p className="error">{error}</p>}
+        {loading && (
+          <div className="card">
+            <div className="loading"></div>
+            <span>Déchiffrement en cours...</span>
+          </div>
+        )}
+        
+        {error && (
+          <div className="card">
+            <p className="error">❌ {error}</p>
+            <button onClick={() => window.location.href = '/'}>
+              Créer un nouveau secret
+            </button>
+          </div>
+        )}
 
         {!loading && !error && secret && (
           <div className="card">
-            <p>Voici le secret (il a été détruit côté serveur après cette lecture) :</p>
+            <div className="success">
+              ✅ Secret déchiffré avec succès !
+            </div>
+            <div className="warning-badge">
+              🔥 Ce secret a été détruit et ne peut plus être consulté
+            </div>
             <pre className="secret-box">{secret}</pre>
+            <button onClick={() => window.location.href = '/'}>
+              Créer un nouveau secret
+            </button>
           </div>
         )}
       </div>
     );
   }
 
-  //Création
+  // Mode création
   return (
     <div className="container">
-      <h1>SecureVault 🔒</h1>
-      <p>Partagez des secrets qui s'autodétruisent.</p>
+      <h1>🔒 SecureVault</h1>
+      <p className="subtitle">Partagez des secrets qui s'autodétruisent après lecture</p>
 
-      {error && <p className="error">{error}</p>}
+      {error && <p className="error">❌ {error}</p>}
 
       {!link ? (
         <div className="card">
+          <div className="info">
+            ℹ️ Votre secret sera chiffré côté client avec AES-256
+          </div>
           <textarea
             value={secret}
             onChange={(e) => setSecret(e.target.value)}
-            placeholder="Écrivez votre secret ici..."
-            rows={4}
+            placeholder="Écrivez votre secret ici... (mot de passe, token, code)"
+            rows={6}
           />
-          <button onClick={handleCreate} disabled={loading}>
-            {loading ? 'Chiffrement...' : 'Sécuriser & Générer le lien'}
+          <button onClick={handleCreate} disabled={loading || !secret.trim()}>
+            {loading ? (
+              <>
+                <span className="loading"></span>
+                Chiffrement en cours...
+              </>
+            ) : (
+              '🔐 Sécuriser & Générer le lien'
+            )}
           </button>
+          <div className="warning-badge" style={{ marginTop: '1rem' }}>
+            ⚠️ Le secret s'autodétruira après la première lecture
+          </div>
         </div>
       ) : (
-        <div className="result">
-          <p>Voici votre lien sécurisé (Copiez-le vite !) :</p>
-          <div className="link-box">
-            <input type="text" readOnly value={link} />
-            <button onClick={() => navigator.clipboard.writeText(link)}>Copier</button>
+        <div className="card">
+          <div className="success">
+            ✅ Lien sécurisé créé avec succès !
           </div>
-          <button onClick={() => { setLink(''); setSecret(''); }} className="reset">
-            Nouveau secret
+          <div className="link-container">
+            <p>📤 Partagez ce lien (une seule utilisation) :</p>
+            <div className="secure-link">{link}</div>
+            <button onClick={copyToClipboard}>
+              📋 Copier le lien
+            </button>
+          </div>
+          <button 
+            onClick={() => { setLink(''); setSecret(''); }} 
+            className="secondary"
+          >
+            ➕ Créer un nouveau secret
           </button>
+          <div className="warning-badge" style={{ marginTop: '1rem' }}>
+            🔥 Ce lien ne fonctionnera qu'une seule fois
+          </div>
         </div>
       )}
     </div>

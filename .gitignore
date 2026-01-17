@@ -1,6 +1,38 @@
-node_modules/ 
-client/dist/ 
-client/node_modules/ 
-server/node_modules/ 
-.env 
+# Dependencies
+node_modules/
+client/node_modules/
+server/node_modules/
+
+# Build outputs
+client/dist/
+server/dist/
+*.log
+
+# Environment variables
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+
+# Editor directories
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Testing
+coverage/
+.nyc_output/
+
+# Documentation (keep for Git)
 PROJECT_CONTEXT.md
+
+# Temporary files
+*.tmp
+.cache/
