@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { generateKey, encryptSecret, decryptSecret } from './crypto';
 import './App.css';
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
 function App({ mode = 'create', secretId }) {
   const [secret, setSecret] = useState('');
   const [link, setLink] = useState('');
@@ -23,7 +25,7 @@ function App({ mode = 'create', secretId }) {
       }
 
       try {
-        const res = await fetch(`http://localhost:5000/api/secrets/${secretId}`);
+        const res = await fetch(`${API_URL}/api/secrets/${secretId}`);
         const data = await res.json();
 
         if (cancelled) return;
@@ -62,7 +64,7 @@ function App({ mode = 'create', secretId }) {
     const encryptedData = encryptSecret(secret, key);
 
     try {
-      const response = await fetch('http://localhost:5000/api/secrets', {
+      const response = await fetch(`${API_URL}/api/secrets`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ encryptedData }),
