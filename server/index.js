@@ -9,8 +9,13 @@ const PORT = process.env.PORT || 5000;
 
 // Middleware de sécurité
 app.use(helmet());
+
+// Configuration CORS - accepte CORS_ORIGIN (Railway) ou CLIENT_URL
+const corsOrigins = process.env.CORS_ORIGIN || process.env.CLIENT_URL || '*';
+const allowedOrigins = corsOrigins.split(',').map(origin => origin.trim());
+
 app.use(cors({
-  origin: process.env.CLIENT_URL || '*',
+  origin: allowedOrigins,
   methods: ['GET', 'POST'],
   credentials: true
 }));
